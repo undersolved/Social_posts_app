@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException  # noqa
-from app.schemas import PostCreate  # noq
+from app.schemas import PostCreate, PostResponse  # noq
 
 app = FastAPI()
 
@@ -53,7 +53,7 @@ def get_all_posts(limit: int | None = None):
 
 
 @app.get("/posts/{id}")
-def get_post_by_id(id: int):
+def get_post_by_id(id: int)->PostResponse:
     if id not in text_posts:
         raise HTTPException(status_code=404, detail="Post not found")
 
@@ -61,7 +61,7 @@ def get_post_by_id(id: int):
 
 
 @app.post("/posts")
-def create_post(post: PostCreate):
+def create_post(post: PostCreate) -> PostResponse:
     new_post = {"title": post.title, "content": post.content}
     text_posts[max(text_posts.keys()) + 1] = new_post
     return new_post
